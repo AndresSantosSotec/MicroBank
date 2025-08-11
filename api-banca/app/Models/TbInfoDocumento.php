@@ -9,25 +9,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class TbInfoDocumento
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string $descripcion
  *
  * @package App\Models
  */
-class User extends Model
+class TbInfoDocumento extends Model
 {
-	protected $table = 'users';
+	protected $table = 'tb_info_documentos';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
-	];
-
 	protected $fillable = [
-		'username',
-		'password'
+		'descripcion'
 	];
 }

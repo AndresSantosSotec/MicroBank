@@ -9,25 +9,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class IpAccess
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string $ip
+ * @property string|null $comentario
  *
  * @package App\Models
  */
-class User extends Model
+class IpAccess extends Model
 {
-	protected $table = 'users';
+	protected $table = 'ip_access';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
-	];
-
 	protected $fillable = [
-		'username',
-		'password'
+		'ip',
+		'comentario'
 	];
 }

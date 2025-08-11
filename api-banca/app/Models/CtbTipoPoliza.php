@@ -9,25 +9,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class CtbTipoPoliza
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string $descripcion
+ * @property string $abr
  *
  * @package App\Models
  */
-class User extends Model
+class CtbTipoPoliza extends Model
 {
-	protected $table = 'users';
+	protected $table = 'ctb_tipo_poliza';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
-	];
-
 	protected $fillable = [
-		'username',
-		'password'
+		'descripcion',
+		'abr'
 	];
 }

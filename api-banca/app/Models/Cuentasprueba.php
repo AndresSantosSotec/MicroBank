@@ -9,25 +9,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class Cuentasprueba
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string $cuenta
+ * @property float $tasa
  *
  * @package App\Models
  */
-class User extends Model
+class Cuentasprueba extends Model
 {
-	protected $table = 'users';
+	protected $table = 'cuentasprueba';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
+	protected $casts = [
+		'tasa' => 'float'
 	];
 
 	protected $fillable = [
-		'username',
-		'password'
+		'cuenta',
+		'tasa'
 	];
 }

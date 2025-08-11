@@ -9,25 +9,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class CtbCuentasContable
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string $descripcion
  *
  * @package App\Models
  */
-class User extends Model
+class CtbCuentasContable extends Model
 {
-	protected $table = 'users';
+	protected $table = 'ctb_cuentas_contables';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
-	];
-
 	protected $fillable = [
-		'username',
-		'password'
+		'descripcion'
 	];
 }

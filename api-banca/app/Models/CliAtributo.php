@@ -9,25 +9,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class CliAtributo
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property string|null $nombre
+ * @property string|null $tipo
+ * @property string|null $descripcion
  *
  * @package App\Models
  */
-class User extends Model
+class CliAtributo extends Model
 {
-	protected $table = 'users';
+	protected $table = 'cli_atributos';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
-	];
-
 	protected $fillable = [
-		'username',
-		'password'
+		'nombre',
+		'tipo',
+		'descripcion'
 	];
 }

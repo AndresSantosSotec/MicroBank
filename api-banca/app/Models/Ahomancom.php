@@ -9,25 +9,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class User
+ * Class Ahomancom
  * 
  * @property int $id
- * @property string $username
- * @property string $password
+ * @property int $cuenta
  *
  * @package App\Models
  */
-class User extends Model
+class Ahomancom extends Model
 {
-	protected $table = 'users';
+	protected $table = 'ahomancom';
 	public $timestamps = false;
 
-	protected $hidden = [
-		'password'
+	protected $casts = [
+		'cuenta' => 'int'
 	];
 
 	protected $fillable = [
-		'username',
-		'password'
+		'cuenta'
 	];
 }
