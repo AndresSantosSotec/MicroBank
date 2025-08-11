@@ -37,9 +37,6 @@ return [
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
         ],
 
         'mysql' => [
@@ -60,6 +57,42 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+        ],
+
+        // =======================
+        // CONEXIÓN BANANA
+        // =======================
+        'banana' => [
+            'driver' => env('DB_BANANA_CONNECTION', 'mysql'),
+            'host' => env('DB_BANANA_HOST', '127.0.0.1'),
+            'port' => env('DB_BANANA_PORT', '3306'),
+            'database' => env('DB_BANANA_DATABASE', 'forge'),
+            'username' => env('DB_BANANA_USERNAME', 'forge'),
+            'password' => env('DB_BANANA_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+
+        // =======================
+        // CONEXIÓN GENERAL
+        // =======================
+        'general' => [
+            'driver' => env('DB_GENERAL_CONNECTION', 'mysql'),
+            'host' => env('DB_GENERAL_HOST', '127.0.0.1'),
+            'port' => env('DB_GENERAL_PORT', '3306'),
+            'database' => env('DB_GENERAL_DATABASE', 'forge'),
+            'username' => env('DB_GENERAL_USERNAME', 'forge'),
+            'password' => env('DB_GENERAL_PASSWORD', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
         ],
 
         'mariadb' => [
@@ -108,11 +141,10 @@ return [
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            // 'encrypt' => env('DB_ENCRYPT', 'yes'),
-            // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -147,7 +179,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-database-'),
+            'prefix' => env('REDIS_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')) . '-database-'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
