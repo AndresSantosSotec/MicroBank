@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TbAgencia extends Model
 {
-    protected $connection = 'banana';
 	protected $table = 'tb_agencias';
 	protected $primaryKey = 'id_agencia';
 	public $timestamps = false;
