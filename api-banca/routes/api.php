@@ -12,6 +12,15 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('creditos/solicitudes', [CresoliController::class, 'store']);
 
 
+Route::get('/ping', function () {
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'Servidor Laravel accesible ✅',
+        'ip' => request()->ip(),
+        'time' => now()->toDateTimeString()
+    ]);
+});
+
 
 
 Route::get('/agencias', [AgenciasController::class, 'index']);
