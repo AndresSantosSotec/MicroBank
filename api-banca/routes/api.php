@@ -6,12 +6,6 @@ use App\Http\Controllers\CresoliController;
 use App\Http\Controllers\AgenciasController;
 use App\Http\Controllers\CatalogosEconomicosController;
 
-Route::post('/login', [AuthController::class, 'login']);
-
-//rutas Iniciales para MSplusw Virtual Banca
-Route::post('creditos/solicitudes', [CresoliController::class, 'store']);
-
-
 Route::get('/ping', function () {
     return response()->json([
         'status' => 'ok',
@@ -22,7 +16,13 @@ Route::get('/ping', function () {
 });
 
 
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/agencias', [AgenciasController::class, 'index']);
-Route::get('/economia/sectores', [CatalogosEconomicosController::class, 'sectores']);
-Route::get('/economia/sectores/{sectorId}/actividades', [CatalogosEconomicosController::class, 'actividades']);
+// Secure routes for the backend
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('creditos/solicitudes', [CresoliController::class, 'store']);
+
+    Route::get('/agencias', [AgenciasController::class, 'index']);
+    Route::get('/economia/sectores', [CatalogosEconomicosController::class, 'sectores']);
+    Route::get('/economia/sectores/{sectorId}/actividades', [CatalogosEconomicosController::class, 'actividades']);
+});

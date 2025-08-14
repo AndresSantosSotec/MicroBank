@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
-     * Authenticate a user using their client code and password.
+     * Authenticate a user using their username and password.
      */
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'codigo_cliente' => ['required', 'string'],
+            'name' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
         /** @var User|null $user */
-        $user = User::where('name', $credentials['codigo_cliente'])->first();
+        $user = User::where('name', $credentials['name'])->first();
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json([
