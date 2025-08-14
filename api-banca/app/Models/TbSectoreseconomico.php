@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TbSectoreseconomico extends Model
 {
-    protected $connection = 'general';
 	protected $table = 'tb_sectoreseconomicos';
 	protected $primaryKey = 'id_SectoresEconomicos';
 	public $incrementing = false;
