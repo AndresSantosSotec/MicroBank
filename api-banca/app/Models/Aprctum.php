@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Aprctum
- * 
+ *
  * @property int $id_cuenta
  * @property string $ccodaport
  * @property string|null $ccodcli
@@ -37,6 +37,7 @@ class Aprctum extends Model
 	protected $table = 'aprcta';
 	protected $primaryKey = 'id_cuenta';
 	public $timestamps = false;
+    protected $connection = 'banana';
 
 	protected $casts = [
 		'nlibreta' => 'int',

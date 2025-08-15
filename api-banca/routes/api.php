@@ -8,6 +8,8 @@ use App\Http\Controllers\CatalogosEconomicosController;
 use App\Http\Controllers\MeController;
 use App\Http\Controllers\GarantiasController;
 use App\Http\Controllers\LineasCreditoController;
+use App\Http\Controllers\CuentasAhorroController;
+use App\Http\Controllers\CuentasAportacionesController;
 
 
 Route::get('/ping', function () {
@@ -40,6 +42,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/creditos/lineas', [LineasCreditoController::class, 'index']);
     Route::get('/creditos/lineas/{id}', [LineasCreditoController::class, 'show']);
     Route::get('/creditos/lineas/by-code/{code}', [LineasCreditoController::class, 'byCode']);
+    //Metodos para Cuentas de Ahorro
+    Route::get('/me/cuentas/ahorro', [CuentasAhorroController::class, 'mine']);
+    Route::get('/clientes/{client_code}/cuentas/ahorro', [CuentasAhorroController::class, 'byClient']); // opcional backoffice
+    //Metodos para Cuentas de Aportaciones
+    Route::get('/me/cuentas/aportaciones', [CuentasAportacionesController::class, 'mine']);
+    Route::get('/clientes/{client_code}/cuentas/aportaciones', [CuentasAportacionesController::class, 'byClient']); // opcional
 });
 
 

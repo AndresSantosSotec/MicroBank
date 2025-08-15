@@ -61,8 +61,5 @@ class User extends Authenticatable
         return $this->hasOne(TbCliente::class, 'idcod_cliente', 'email');
     }
 
-
-
-
 }
 

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Ahomctum
- * 
+ *
  * @property string $ccodaho
  * @property string $ccodcli
  * @property string|null $num_nit
@@ -49,6 +49,7 @@ class Ahomctum extends Model
 	protected $primaryKey = 'ccodaho';
 	public $incrementing = false;
 	public $timestamps = false;
+    protected $connection = 'banana';
 
 	protected $casts = [
 		'nlibreta' => 'int',
