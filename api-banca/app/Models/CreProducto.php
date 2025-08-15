@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class CreProducto
- * 
+ *
  * @property int $id
  * @property int $id_fondo
  * @property string $cod_producto
@@ -41,7 +41,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $id_tipo_periodo
  * @property int|null $reestructuracion
  * @property int|null $diasCorridos
- * 
+ *
  * @property CtbNomenclatura $ctb_nomenclatura
  * @property CtbFuenteFondo $ctb_fuente_fondo
  * @property Collection|CreProductosGasto[] $cre_productos_gastos
@@ -52,6 +52,7 @@ class CreProducto extends Model
 {
 	use SoftDeletes;
 	protected $table = 'cre_productos';
+     protected $connection = 'banana';
 
 	protected $casts = [
 		'id_fondo' => 'int',

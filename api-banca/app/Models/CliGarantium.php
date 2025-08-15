@@ -46,6 +46,8 @@ class CliGarantium extends Model
     protected $table = 'cli_garantia';
     protected $primaryKey = 'idGarantia';
 
+    protected $connection = 'banana';
+
     public function cliente()
     {
         return $this->belongsTo(TbCliente::class, 'idCliente', 'idcod_cliente');
