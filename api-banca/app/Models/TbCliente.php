@@ -8,10 +8,11 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CliGarantium;
 
 /**
  * Class TbCliente
- * 
+ *
  * @property string $idcod_cliente
  * @property string $id_tipoCliente
  * @property string $agencia
@@ -104,6 +105,9 @@ class TbCliente extends Model
 	protected $primaryKey = 'idcod_cliente';
 	public $incrementing = false;
 	public $timestamps = false;
+
+        // 🔹 Usar la conexión secundaria
+    protected $connection = 'banana';
 
 	protected $casts = [
 		'date_birth' => 'datetime',
@@ -207,4 +211,11 @@ class TbCliente extends Model
 		'fiador',
 		'observaciones'
 	];
+        public function garantias()
+    {
+        // FK en cli_garantia.idCliente → PK string en tb_cliente.idcod_cliente
+        return $this->hasMany(CliGarantium::class, 'idCliente', 'idcod_cliente');
+    }
+
+
 }

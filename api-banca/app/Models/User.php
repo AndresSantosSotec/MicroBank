@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\TbCliente;
 
 /**
  * Class User
@@ -54,5 +55,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function cliente()
+    {
+        return $this->hasOne(TbCliente::class, 'idcod_cliente', 'email');
+    }
+
+
+
+
 }
 
