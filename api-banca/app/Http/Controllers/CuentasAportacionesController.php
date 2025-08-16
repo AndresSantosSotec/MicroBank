@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Aprctum;
 use App\Http\Resources\CuentaAportacionResource;
 use Carbon\Carbon;
@@ -35,26 +36,24 @@ class CuentasAportacionesController extends Controller
                 'cta.ccodaport',
                 'cta.ccodcli',
                 'cta.ccodtip',
-                'cta.estado',
-                'cta.fecha_apertura',
-                'cta.fecha_cancel',
-                'cta.fecha_ult',
                 'cta.tasa',
                 'cta.nlibreta',
                 'cta.ret',
+                'cta.estado',
             ])
-            ->selectRaw('calcular_saldo_apr_tipcuenta(cta.ccodaport, ?) as saldo', [$asOfDate])
-            ->where('cta.ccodcli', $clientCode)
-            ->orderByDesc('cta.fecha_ult');
-
-        if ($estado !== 'all') {
-            $query->where('cta.estado', $estado);
-        }
-
-        if ($q !== '') {
-            $like = '%' . $q . '%';
-            $query->where('cta.ccodaport', 'like', $like);
-        }
+            ->selectRaw("CASE WHEN cta.fecha_apertura IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_apertura END AS fecha_apertura")
+            ->selectRaw("CASE WHEN cta.fecha_cancel IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_cancel END AS fecha_cancel")
+            ->selectRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_ult END AS fecha_ult")
+            ->selectRaw('calcular_saldo_apr_tipcuenta(cta.ccodaport, ?) AS saldo', [$asOfDate])
+            ->whereRaw('TRIM(cta.ccodcli) = ?', [$clientCode])
+            ->when($estado !== 'all', fn ($q) => $q->whereRaw('TRIM(cta.estado) = ?', [$estado]))
+            ->when($q !== '', function ($query) use ($q) {
+                $like = "%$q%";
+                $query->where('cta.ccodaport', 'like', $like);
+            })
+            ->orderByRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN 1 ELSE 0 END ASC")
+            ->orderByDesc(DB::raw('NULLIF(cta.fecha_ult, "0000-00-00")'))
+            ->orderBy('cta.ccodaport');
 
         $rows = $query->paginate($perPage);
 
@@ -81,21 +80,21 @@ class CuentasAportacionesController extends Controller
             ->from('aprcta as cta')
             ->select([
                 'cta.id_cuenta','cta.ccodaport','cta.ccodcli','cta.ccodtip',
-                'cta.estado','cta.fecha_apertura','cta.fecha_cancel','cta.fecha_ult',
-                'cta.tasa','cta.nlibreta','cta.ret',
+                'cta.tasa','cta.nlibreta','cta.ret','cta.estado',
             ])
-            ->selectRaw('calcular_saldo_apr_tipcuenta(cta.ccodaport, ?) as saldo', [$asOfDate])
-            ->where('cta.ccodcli', $clientCode)
-            ->orderByDesc('cta.fecha_ult');
-
-        if ($estado !== 'all') {
-            $query->where('cta.estado', $estado);
-        }
-
-        if ($q !== '') {
-            $like = '%' . $q . '%';
-            $query->where('cta.ccodaport', 'like', $like);
-        }
+            ->selectRaw("CASE WHEN cta.fecha_apertura IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_apertura END AS fecha_apertura")
+            ->selectRaw("CASE WHEN cta.fecha_cancel IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_cancel END AS fecha_cancel")
+            ->selectRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_ult END AS fecha_ult")
+            ->selectRaw('calcular_saldo_apr_tipcuenta(cta.ccodaport, ?) AS saldo', [$asOfDate])
+            ->whereRaw('TRIM(cta.ccodcli) = ?', [$clientCode])
+            ->when($estado !== 'all', fn ($q) => $q->whereRaw('TRIM(cta.estado) = ?', [$estado]))
+            ->when($q !== '', function ($query) use ($q) {
+                $like = "%$q%";
+                $query->where('cta.ccodaport', 'like', $like);
+            })
+            ->orderByRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN 1 ELSE 0 END ASC")
+            ->orderByDesc(DB::raw('NULLIF(cta.fecha_ult, "0000-00-00")'))
+            ->orderBy('cta.ccodaport');
 
         $rows = $query->paginate($perPage);
 

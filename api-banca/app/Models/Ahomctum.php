@@ -72,11 +72,11 @@ class Ahomctum extends Model
 		'created_by' => 'int'
 	];
 
-	protected $fillable = [
-		'ccodcli',
-		'num_nit',
-		'ccodcli2',
-		'nlibreta',
+        protected $fillable = [
+                'ccodcli',
+                'num_nit',
+                'ccodcli2',
+                'nlibreta',
 		'estado',
 		'fecha_apertura',
 		'fecha_cancel',
@@ -96,8 +96,32 @@ class Ahomctum extends Model
 		'frec',
 		'plazo',
 		'estrict',
-		'ctainteres',
-		'encargado',
-		'created_by'
-	];
+                'ctainteres',
+                'encargado',
+                'created_by'
+        ];
+
+        protected function sanitizeDate($value)
+        {
+                if ($value === '0000-00-00' || $value === '0000-00-00 00:00:00' || $value === null) {
+                        return null;
+                }
+
+                return Carbon::parse($value);
+        }
+
+        public function getFechaAperturaAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
+
+        public function getFechaCancelAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
+
+        public function getFechaUltAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
 }

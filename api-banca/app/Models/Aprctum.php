@@ -51,22 +51,46 @@ class Aprctum extends Model
 		'ret' => 'bool'
 	];
 
-	protected $fillable = [
-		'ccodaport',
-		'ccodcli',
-		'ccodtip',
-		'num_nit',
-		'nlibreta',
-		'estado',
-		'fecha_apertura',
-		'fecha_cancel',
-		'fecha_ult',
-		'fecha_mod',
-		'codigo_usu',
-		'correlativo',
-		'numlinea',
-		'tasa',
-		'ctainteres',
-		'ret'
-	];
+        protected $fillable = [
+                'ccodaport',
+                'ccodcli',
+                'ccodtip',
+                'num_nit',
+                'nlibreta',
+                'estado',
+                'fecha_apertura',
+                'fecha_cancel',
+                'fecha_ult',
+                'fecha_mod',
+                'codigo_usu',
+                'correlativo',
+                'numlinea',
+                'tasa',
+                'ctainteres',
+                'ret'
+        ];
+
+        protected function sanitizeDate($value)
+        {
+                if ($value === '0000-00-00' || $value === '0000-00-00 00:00:00' || $value === null) {
+                        return null;
+                }
+
+                return Carbon::parse($value);
+        }
+
+        public function getFechaAperturaAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
+
+        public function getFechaCancelAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
+
+        public function getFechaUltAttribute($value)
+        {
+                return $this->sanitizeDate($value);
+        }
 }
