@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Ahomctum;
 use App\Http\Resources\CuentaAhorroResource;
 use Carbon\Carbon;
@@ -34,39 +35,34 @@ class CuentasAhorroController extends Controller
         // Validar/normalizar fecha (si viene)
         $asOfDate = $asOf ? Carbon::parse($asOf)->toDateString() : now()->toDateString();
 
-        // IMPORTANTE: alias de tabla para poder referenciar en la función SQL
         $query = Ahomctum::query()
             ->from('ahomcta as cta')
             ->select([
                 'cta.ccodaho',
                 'cta.ccodcli',
                 'cta.cnomaho',
-                'cta.estado',
-                'cta.fecha_apertura',
-                'cta.fecha_cancel',
-                'cta.fecha_ult',
                 'cta.tasa',
                 'cta.nlibreta',
                 'cta.accountprg',
                 'cta.monobj',
+                'cta.estado',
             ])
-            // Llamada a la función en la base 'banana'
-            // Nota: al usar el modelo Ahomctum, ya estamos en la conexión 'banana'
-            ->selectRaw('calcular_saldo_aho_tipcuenta(cta.ccodaho, ?) as saldo', [$asOfDate])
-            ->where('cta.ccodcli', $clientCode)
-            ->orderByDesc('cta.fecha_ult');
-
-        if ($estado !== 'all') {
-            $query->where('cta.estado', $estado);
-        }
-
-        if ($q !== '') {
-            $like = '%' . $q . '%';
-            $query->where(function ($w) use ($like) {
-                $w->where('cta.ccodaho', 'like', $like)
-                  ->orWhere('cta.cnomaho', 'like', $like);
-            });
-        }
+            ->selectRaw("CASE WHEN cta.fecha_apertura IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_apertura END AS fecha_apertura")
+            ->selectRaw("CASE WHEN cta.fecha_cancel IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_cancel END AS fecha_cancel")
+            ->selectRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_ult END AS fecha_ult")
+            ->selectRaw('calcular_saldo_aho_tipcuenta(cta.ccodaho, ?) AS saldo', [$asOfDate])
+            ->whereRaw('TRIM(cta.ccodcli) = ?', [$clientCode])
+            ->when($estado !== 'all', fn ($q) => $q->whereRaw('TRIM(cta.estado) = ?', [$estado]))
+            ->when($q !== '', function ($query) use ($q) {
+                $like = "%$q%";
+                $query->where(function ($w) use ($like) {
+                    $w->where('cta.ccodaho', 'like', $like)
+                      ->orWhere('cta.cnomaho', 'like', $like);
+                });
+            })
+            ->orderByRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN 1 ELSE 0 END ASC")
+            ->orderByDesc(DB::raw('NULLIF(cta.fecha_ult, "0000-00-00")'))
+            ->orderBy('cta.ccodaho');
 
         $rows = $query->paginate($perPage);
 
@@ -92,24 +88,25 @@ class CuentasAhorroController extends Controller
         $query = Ahomctum::query()
             ->from('ahomcta as cta')
             ->select([
-                'cta.ccodaho','cta.ccodcli','cta.cnomaho','cta.estado',
-                'cta.fecha_apertura','cta.fecha_cancel','cta.fecha_ult',
-                'cta.tasa','cta.nlibreta','cta.accountprg','cta.monobj',
+                'cta.ccodaho','cta.ccodcli','cta.cnomaho','cta.tasa',
+                'cta.nlibreta','cta.accountprg','cta.monobj','cta.estado',
             ])
-            ->selectRaw('calcular_saldo_aho_tipcuenta(cta.ccodaho, ?) as saldo', [$asOfDate])
-            ->where('cta.ccodcli', $clientCode)
-            ->orderByDesc('cta.fecha_ult');
-
-        if ($estado !== 'all') {
-            $query->where('cta.estado', $estado);
-        }
-        if ($q !== '') {
-            $like = '%' . $q . '%';
-            $query->where(function ($w) use ($like) {
-                $w->where('cta.ccodaho', 'like', $like)
-                  ->orWhere('cta.cnomaho', 'like', $like);
-            });
-        }
+            ->selectRaw("CASE WHEN cta.fecha_apertura IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_apertura END AS fecha_apertura")
+            ->selectRaw("CASE WHEN cta.fecha_cancel IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_cancel END AS fecha_cancel")
+            ->selectRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN NULL ELSE cta.fecha_ult END AS fecha_ult")
+            ->selectRaw('calcular_saldo_aho_tipcuenta(cta.ccodaho, ?) AS saldo', [$asOfDate])
+            ->whereRaw('TRIM(cta.ccodcli) = ?', [$clientCode])
+            ->when($estado !== 'all', fn ($q) => $q->whereRaw('TRIM(cta.estado) = ?', [$estado]))
+            ->when($q !== '', function ($query) use ($q) {
+                $like = "%$q%";
+                $query->where(function ($w) use ($like) {
+                    $w->where('cta.ccodaho', 'like', $like)
+                      ->orWhere('cta.cnomaho', 'like', $like);
+                });
+            })
+            ->orderByRaw("CASE WHEN cta.fecha_ult IN ('0000-00-00','0000-00-00 00:00:00') THEN 1 ELSE 0 END ASC")
+            ->orderByDesc(DB::raw('NULLIF(cta.fecha_ult, "0000-00-00")'))
+            ->orderBy('cta.ccodaho');
 
         $rows = $query->paginate($perPage);
 
